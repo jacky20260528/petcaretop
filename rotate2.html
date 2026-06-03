@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Content Platform - Exclusive Reward</title>
+    <style>
+        /* 零外部依赖极简全局样式，消灭白屏等待 */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            display: block;
+            text-align: center;
+            padding: 20px 15px;
+        }
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: #1a1a1a;
+            border-radius: 16px;
+            padding: 25px 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+            border: 1px solid #2a2a2a;
+        }
+        .header-badge {
+            background-color: #000000;
+            border: 2px solid #39b54a; /* 对应广告主后端的标志性绿色 */
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 20px;
+            display: inline-block;
+            width: 100%;
+        }
+        .header-badge h2 {
+            color: #39b54a;
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+        .header-badge .sub-badge {
+            background-color: #e74c3c;
+            color: #fff;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 2px 8px;
+            border-radius: 4px;
+            display: inline-block;
+            text-transform: uppercase;
+        }
+        h1 {
+            font-size: 22px;
+            margin-bottom: 12px;
+            color: #ffffff;
+        }
+        p.intro {
+            font-size: 14px;
+            color: #b3b3b3;
+            line-height: 1.5;
+            margin-bottom: 30px;
+        }
+        
+        /* 丝滑贝塞尔大转盘结构 */
+        .wheel-container {
+            position: relative;
+            width: 280px;
+            height: 280px;
+            margin: 0 auto 30px auto;
+        }
+        .wheel-pointer {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-top: 25px solid #e74c3c;
+            z-index: 10;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+        }
+        .wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 8px solid #2c3e50;
+            position: relative;
+            overflow: hidden;
+            /* 核心修复：更写成正确的 cubic-bezier，确保前快后慢的真实刹车感 */
+            transition: transform 4s cubic-bezier(0.25, 1, 0.2, 1);
+            box-shadow: 0 0 20px rgba(0,0,0,0.6);
+            background: #34495e;
+        }
+        .wheel-svg {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+        .spin-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 64px;
+            height: 64px;
+            background-color: #ffffff;
+            border-radius: 50%;
+            border: 4px solid #2c3e50;
+            color: #000000;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            z-index: 5;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            display: table;
+        }
+        .spin-button-text {
+            display: table-cell;
+            vertical-align: middle;
+            text-align: center;
+        }
+        
+        /* 中奖后的通知大框 */
+        .result-box {
+            display: none; /* 坚决默认隐藏，防止剧透 */
+            background: #222;
+            border: 2px solid #39b54a;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 15px;
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .result-box h3 {
+            color: #39b54a;
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+        .result-box p {
+            font-size: 13px;
+            color: #e0e0e0;
+            line-height: 1.5;
+            margin-bottom: 18px;
+        }
+        .claim-btn {
+            display: inline-block;
+            width: 100%;
+            background: linear-gradient(180deg, #5bcb6e 0%, #39b54a 100%);
+            color: #fff;
+            font-size: 18px;
+            font-weight: bold;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(57,181,74,0.4);
+            text-transform: uppercase;
+        }
+        .claim-btn:hover {
+            background: linear-gradient(180deg, #62d776 0%, #3cb04d 100%);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header-badge">
+            <h2>✓ Content Platform</h2>
+            <div class="sub-badge"><span class="dynamic-isp">Mobile</span> User Exclusive</div>
+        </div>
+
+        <h1>Congratulations <span class="dynamic-isp">Mobile</span> User!</h1>
+        <p class="intro">You have been selected to participate in today's lucky draw. Spin the wheel to unlock your exclusive premium content access!</p>
+
+        <div class="wheel-container">
+            <div class="wheel-pointer"></div>
+            <div id="lucky-wheel" class="wheel">
+                <svg class="wheel-svg" viewBox="0 0 100 100">
+                    <path d="M 50 50 L 100 50 A 50 50 0 0 1 75 93.3 Z" fill="#39b54a"/>
+                    <path d="M 50 50 L 75 93.3 A 50 50 0 0 1 25 93.3 Z" fill="#2c3e50"/>
+                    <path d="M 50 50 L 25 93.3 A 50 50 0 0 1 0 50 Z" fill="#39b54a"/>
+                    <path d="M 50 50 L 0 50 A 50 50 0 0 1 25 6.7 Z" fill="#2c3e50"/>
+                    <path d="M 50 50 L 25 6.7 A 50 50 0 0 1 75 6.7 Z" fill="#39b54a"/>
+                    <path d="M 50 50 L 75 6.7 A 50 50 0 0 1 100 50 Z" fill="#2c3e50"/>
+                </svg>
+                <div id="spin-trigger" class="spin-button">
+                    <span class="spin-button-text">SPIN</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="success-box" class="result-box">
+            <h3>✓ YOU WON!</h3>
+            <p>Your prize: <strong>Premium Content Pass</strong> has been reserved.<br>
+            Click below to verify your <span class="dynamic-isp">Mobile</span> number and activate your content subscription instantly!</p>
+            <a id="offer-link" href="#" class="claim-btn">Claim Now</a>
+        </div>
+    </div>
+
+    <script>
+        // 细节 1 落地：自动截取并解析 URL 中 BeMob 塞过来的 ?isp=xxxx 核心参数
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            let isp = getQueryParam('isp');
+            if (isp) {
+                // 安全过滤非法字符并去除两端空格
+                isp = decodeURIComponent(isp).replace(/[^a-zA-Z0-9\s]/g, '').trim();
+                if (isp.length > 0) {
+                    // 首字母大写优化视觉体验
+                    isp = isp.charAt(0).toUpperCase() + isp.slice(1);
+                } else {
+                    isp = 'Mobile';
+                }
+            } else {
+                isp = 'Mobile'; // 如果没传参数（比如WiFi环境或初次测试），默认泛化为 Mobile
+            }
+
+            // 全局渲染所有带有 dynamic-isp 样式的文本标签
+            const elements = document.querySelectorAll('.dynamic-isp');
+            elements.forEach(el => {
+                el.innerText = isp;
+            });
+            
+            // 追踪器对接水管：动态让 Claim Now 按钮完美继承当前页面的 Click ID 及所有追踪宏参数
+            const offerLink = document.getElementById('offer-link');
+            // 获取当前 BeMob 着陆页下属的规范 Click 出口链接
+            const trackerBaseClickUrl = 'https://' + window.location.hostname + '/click'; 
+            offerLink.href = trackerBaseClickUrl + window.location.search;
+        });
+
+        // 转盘物理离心力旋转效果控制
+        const spinTrigger = document.getElementById('spin-trigger');
+        const luckyWheel = document.getElementById('lucky-wheel');
+        const successBox = document.getElementById('success-box');
+        let hasSpun = false;
+
+        spinTrigger.addEventListener('click', () => {
+            if (hasSpun) return; 
+            hasSpun = true;
+
+            // 1440度是整4圈，多加60度确保指针完美、准确地咬合在中奖的绿色（#39b54a）区间
+            const optimalTargetDegrees = 1440 + 60; 
+            luckyWheel.style.transform = `rotate(${optimalTargetDegrees}deg)`;
+
+            // 4000毫秒（4秒）动画平滑结束后，啪地弹起结果通知，并平滑滚动到视野正中心
+            setTimeout(() => {
+                successBox.style.display = 'block';
+                successBox.scrollIntoView({ behavior: 'smooth' });
+            }, 4000);
+        });
+    </script>
+</body>
+</html>
