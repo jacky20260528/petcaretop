@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MAXIS Reward Center</title>
+    <style>
+        /* 极简CSS，拒绝外部加载，确保毫秒级开屏 */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            overflow-x: hidden;
+        }
+        .container {
+            padding: 20px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .header {
+            background-color: #000000;
+            padding: 15px;
+            border-bottom: 3px solid #7cb342; /* 迎合广告主页面的绿色对勾颜色 */
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .logo-text {
+            font-size: 24px;
+            font-weight: bold;
+            color: #7cb342;
+            letter-spacing: 1px;
+        }
+        .operator-badge {
+            background-color: #e53935;
+            color: white;
+            padding: 3px 8px;
+            font-size: 12px;
+            font-weight: bold;
+            border-radius: 3px;
+            display: inline-block;
+            margin-top: 5px;
+        }
+        h1 { font-size: 22px; margin: 15px 0; color: #ffffff; }
+        p { font-size: 15px; color: #b0bec5; line-height: 1.4; }
+        
+        /* 极简动态转盘效果 */
+        .wheel-box {
+            position: relative;
+            width: 260px;
+            height: 260px;
+            margin: 30px auto;
+        }
+        .wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 8px solid #37474f;
+            background: conic-gradient(
+                #7cb342 0deg 60deg, #263238 60deg 120deg,
+                #7cb342 120deg 180deg, #263238 180deg 240deg,
+                #7cb342 240deg 300deg, #263238 300deg 360deg
+            );
+            transition: transform 4s cubic-gradient(0.1, 0.8, 0.1, 1);
+        }
+        .spin-btn {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70px; height: 70px;
+            background-color: #ffffff;
+            color: #000000;
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 16px;
+            border: 4px solid #7cb342;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            display: flex; align-items: center; justify-content: center;
+        }
+        
+        /* 弹窗中奖提示 */
+        .alert-box {
+            display: none;
+            background-color: #1e1e1e;
+            border: 2px solid #7cb342;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+        }
+        .cta-btn {
+            display: inline-block;
+            background-color: #7cb342;
+            color: white;
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 15px;
+            box-shadow: 0 4px 15px rgba(124,179,66,0.4);
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <div class="logo-text">✓ CONTENT PLATFORM</div>
+        <div class="operator-badge">MAXIS USER EXCLUSIVE</div>
+    </div>
+
+    <div id="main-stage">
+        <h1>Congratulations Maxis User!</h1>
+        <p>You have been selected to participate in today's lucky draw. Spin the wheel to unlock your exclusive premium content access!</p>
+        
+        <div class="wheel-box">
+            <div class="wheel" id="wheel"></div>
+            <div class="spin-btn" id="spin-btn" onclick="startSpin()">SPIN</div>
+        </div>
+    </div>
+
+    <!-- 中奖后显示的合规咬合区域 -->
+    <div class="alert-box" id="alert-box">
+        <h2 style="color: #7cb342; margin-top: 0;">✔ YOU WON!</h2>
+        <p style="font-size: 16px; color: #ffffff;">Your prize: <b>Premium Content Pass</b> has been reserved.</p>
+        <p>Click below to verify your Maxis mobile number and activate your content subscription instantly!</p>
+        <!-- 这里的href稍后替换成你BeMob生成的Campaign URL -->
+        <a href="https://替换成你的BEMOB追踪链接" class="cta-btn">CLAIM NOW</a>
+    </div>
+</div>
+
+<script>
+    function startSpin() {
+        const wheel = document.getElementById('wheel');
+        const btn = document.getElementById('spin-btn');
+        const alertBox = document.getElementById('alert-box');
+        const mainStage = document.getElementById('main-stage');
+        
+        // 禁用按钮防止重复点击
+        btn.style.pointerEvents = 'none';
+        
+        // 随机转动3000+度，最终死死停在绿色区域（合规中奖剧本）
+        const randomDegree = 3600 + 150; 
+        wheel.style.transform = `rotate(${randomDegree}deg)`;
+        
+        // 4秒后动画结束，展示中奖闭环
+        setTimeout(() => {
+            alertBox.style.display = 'block';
+            // 滚动到提示区域，方便用户点击
+            alertBox.scrollIntoView({ behavior: 'smooth' });
+        }, 4000);
+    }
+</script>
+
+</body>
+</html>
